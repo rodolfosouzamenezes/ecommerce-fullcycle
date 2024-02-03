@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web: 
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes: 
+      - ./nginx:/usr/share/nginx/html
+    
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  mysqldb:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+  
+  redis: 
+    image: redis:alpine
+    ports:
+      - "6379:6379"
