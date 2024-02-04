@@ -69,6 +69,30 @@ export class Checkout {
 
     return checkout;
   }
+
+  pay() {
+    if (this.status === CheckoutStatus.PAID) {
+      throw new Error('Checkout already paid');
+    }
+
+    if (this.status === CheckoutStatus.FAILED) {
+      throw new Error('Checkout failed');
+    }
+
+    this.status = CheckoutStatus.PAID;
+  }
+
+  fail() {
+    if (this.status === CheckoutStatus.FAILED) {
+      throw new Error('Checkout failed');
+    }
+
+    if (this.status === CheckoutStatus.PAID) {
+      throw new Error('Checkout already paid');
+    }
+
+    this.status = CheckoutStatus.FAILED;
+  }
 }
 
 @Entity()
