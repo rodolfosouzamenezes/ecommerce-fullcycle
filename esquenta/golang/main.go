@@ -1,22 +1,26 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
-type Product struct {
-	ID    int
-	Name  string
-	Price float64
-}
-
-func (p Product) getPrice() float64 {
-	return p.Price
-}
-
-func soma(x, y int) int {
-	return x + y
+func worker(workwerID int, data chan int) {
+	for x := range data {
+		fmt.Printf("Worker %d recebeu %d\n", workwerID, x)
+		time.Sleep(time.Second)
+	}
 }
 
 func main() {
-	carrinho := Product{1, "Maça", 10.00}
-	fmt.Println(carrinho.getPrice())
+	data := make(chan int)
+
+	qtdWorkers := 100000
+	for i := 0; i < qtdWorkers; i++ {
+		go worker(i, data)
+	}
+
+	for i := 0; i < 1000000; i++ {
+		data <- i
+	}
 }
