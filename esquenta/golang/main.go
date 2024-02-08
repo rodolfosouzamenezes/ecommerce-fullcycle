@@ -1,26 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"time"
+	"encoding/json"
+	"net/http"
 )
 
-func worker(workwerID int, data chan int) {
-	for x := range data {
-		fmt.Printf("Worker %d recebeu %d\n", workwerID, x)
-		time.Sleep(time.Second)
-	}
+type Order struct {
+	OrderID      int     `json:"order_id"`
+	CustomerName string  `json:"-"`
+	Price        float64 `json:"price"`
 }
 
 func main() {
-	data := make(chan int)
+	http.HandleFunc("/", HelloHandler)
+	http.ListenAndServe(":8080", nil)
+}
 
-	qtdWorkers := 100000
-	for i := 0; i < qtdWorkers; i++ {
-		go worker(i, data)
-	}
+func HelloHandler(w http.ResponseWriter, r *http.Request) {
+	order := Order{OrderID: 1234, CustomerName: "John Smith", Price: 12.09}
 
-	for i := 0; i < 1000000; i++ {
-		data <- i
-	}
+	json.NewEncoder(w).Encode(order)
 }
